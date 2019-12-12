@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Test</title>
+<link rel="shortcut icon" type="image/x-icon" href="http://gudi.kr/images/icon_goodee.png">
+<style>
+	body {margin: 0;}
+	form {width: 60%; margin: 0 20%;}
+	input, button {width: 100%; height: 50px; margin: 5px 0; border: 0; background-color: black; color: white; font-size: 1.5rem; font-weight: bold;}
+	input[type="submit"], input[type="button"] {cursor: pointer;}
+	input[type="submit"]:active, input[type="button"]:active {background-color: #c0c5c5; color: black;}
+</style>
+<script type="text/javascript">
+	var params = {'id': 'test','pw': '1111'};
+	function formSerialize(formElement) {
+		  var values = {};
+		  var inputs = formElement.elements;
+		  for (var i = 0; i < inputs.length; i++) {
+			if(inputs[i].type == "button" || inputs[i].type == "submit") continue;
+			values[inputs[i].name] = inputs[i].value;
+		  }
+		  return values;
+	}
+	function btnEvent(url, method, type){
+		// form data 받기
+		if(type) {
+			var form = document.querySelector('form');
+			params = formSerialize(form);
+// 			params.id = document.getElementsByName("id")[0].value;
+// 			params.pw = document.getElementsByName("pw")[0].value;
+		}
+		// 옵션 정의
+		var options = {
+				method: method,
+				body: JSON.stringify(params),
+				headers: {'Content-type': 'application/json; charset=UTF-8'}
+			};
+		// 전송
+		fetch(url, options)
+		  	.then(function(response) {console.log(response); return response.json();})
+		  	.then(function(json) {console.log(json); return json;})
+		  	.catch(function(err) {console.error(err);});
+	}
+</script>
+</head>
+<body>
+	<form onsubmit="return false;">
+		<h1>고정값 보내기</h1>
+		<input type="button" value="POST" onclick="btnEvent('/post','POST')">
+		<input type="button" value="PATCH" onclick="btnEvent('/patch','PATCH')">
+		<hr>
+		<h1>입력값 보내기</h1>
+		<input type="text" name="id" value="root">
+		<input type="password" name="pw" value="1234">
+		<input type="submit" value="POST" onclick="btnEvent('/post','POST',true)">
+		<input type="submit" value="PATCH" onclick="btnEvent('/patch','PATCH',true)">
+	</form>
+</body>
+</html>
